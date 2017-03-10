@@ -1,0 +1,20 @@
+build:
+  main:
+    image: golang
+    commands:
+      - go get
+      - go build -o terraform-provider-kapacitor
+      - tar -zcvf terraform-provider-kapacitor-linux-amd64.tar.gz terraform-provider-kapacitor
+    
+      
+publish:
+  s3:
+    acl: authenticated-read
+    region: "us-east-1"
+    bucket: "peoplenet-custom-tools"
+    access_key: $$PEOPLENET_CI_AWS_KEY_ID
+    secret_key: $$PEOPLENET_CI_AWS_SECRET_KEY
+    source: terraform-provider-kapacitor-linux-amd64.tar.gz
+    target: /terraform-provider-kapacitor/terraform-provider-kapacitor-linux-amd64.tar.gz
+    when:
+      branch: master
